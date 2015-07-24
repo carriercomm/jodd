@@ -47,7 +47,7 @@ public class CtorResolver {
 
 	protected final InjectionPointFactory injectionPointFactory;
 
-	public CtorResolver(InjectionPointFactory injectionPointFactory) {
+	public CtorResolver(final InjectionPointFactory injectionPointFactory) {
 		this.injectionPointFactory = injectionPointFactory;
 	}
 
@@ -58,26 +58,26 @@ public class CtorResolver {
 	 * constructors exist, the default one will be used as injection point. Otherwise, exception
 	 * is thrown.
 	 */
-	public CtorInjectionPoint resolve(Class type, boolean useAnnotation) {
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
-		CtorDescriptor[] allCtors = cd.getAllCtorDescriptors();
-		Constructor foundedCtor = null;
-		Constructor defaultCtor = null;
+	public CtorInjectionPoint resolve(final Class<?> type, final boolean useAnnotation) {
+		final ClassDescriptor cd = ClassIntrospector.lookup(type);
+		final CtorDescriptor[] allCtors = cd.getAllCtorDescriptors();
+		Constructor<?> foundedCtor = null;
+		Constructor<?> defaultCtor = null;
 		String refValues = null;
 
-		for (CtorDescriptor ctorDescriptor : allCtors) {
-			Constructor<?> ctor = ctorDescriptor.getConstructor();
+		for (final CtorDescriptor ctorDescriptor : allCtors) {
+			final Constructor<?> ctor = ctorDescriptor.getConstructor();
 
-			Class<?>[] paramTypes = ctor.getParameterTypes();
+			final Class<?>[] paramTypes = ctor.getParameterTypes();
 			if (paramTypes.length == 0) {
 				defaultCtor = ctor;	// detects default ctors
 			}
 			if (useAnnotation == false) {
 				continue;
 			}
-			PetiteInject ref = ctor.getAnnotation(PetiteInject.class);
-			Annotation[][] annotations = ctor.getParameterAnnotations();
-			if (ref == null && !containsAnnotation(annotations)) {
+			final PetiteInject ref = ctor.getAnnotation(PetiteInject.class);
+			final Annotation[][] annotations = ctor.getParameterAnnotations();
+			if (ref == null && !this.containsAnnotation(annotations)) {
 				continue;
 			}
 			if (foundedCtor != null) {
@@ -87,8 +87,7 @@ public class CtorResolver {
 			if (ref != null) {
 				refValues = ref.value().trim();
 			} else {
-				//TODO Convert the Annotation[][] to a String or directly to String[][]
-				refValues = convertAnnotationsToString(annotations);
+				refValues = this.convertAnnotationsToString(annotations);
 			}
 		}
 		if (foundedCtor == null) {
@@ -102,50 +101,34 @@ public class CtorResolver {
 			throw new PetiteException("No constructor (annotated, single or default) founded as injection point for: " + type.getName());
 		}
 
-		String[][] references = PetiteUtil.convertAnnValueToReferences(refValues);
+		final String[][] references = PetiteUtil.convertAnnValueToReferences(refValues);
 
-		return injectionPointFactory.createCtorInjectionPoint(foundedCtor, references);
+		return this.injectionPointFactory.createCtorInjectionPoint(foundedCtor, references);
 	}
-	
-	private boolean containsAnnotation(Annotation[][] annotations) {
-		for (Annotation[] parameterAnnotations : annotations) {
-			for (Annotation annotation : parameterAnnotations) {
+
+	private boolean containsAnnotation(final Annotation[][] annotations) {
+		for (final Annotation[] parameterAnnotations : annotations) {
+			for (final Annotation annotation : parameterAnnotations) {
 				if (annotation.annotationType().equals(PetiteInject.class)) {
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
-	private String[][] convertAnnotationsToStringArray(Annotation[][] annotations) {
-		String[][] result = new String[annotations.length][];
-		
-		for (int i = 0; i < annotations.length; i++) {
-			Annotation[] parameterAnnotations = annotations[i];
-			for (Annotation annotation : parameterAnnotations) {
-				if (annotation.annotationType().equals(PetiteInject.class)) {
-					result[i] = new String[] { ((PetiteInject) annotation).value() };
-				}
-			}
-		}
-		
-		return result;
-	}
-	
-	private String convertAnnotationsToString(Annotation[][] annotations) {
-		List<String> annotationValues = new LinkedList<>();
-		
-		for (int i = 0; i < annotations.length; i++) {
-			Annotation[] parameterAnnotations = annotations[i];
-			for (Annotation annotation : parameterAnnotations) {
+
+	private String convertAnnotationsToString(final Annotation[][] annotations) {
+		final List<String> annotationValues = new LinkedList<>();
+
+		for (final Annotation[] parameterAnnotations : annotations) {
+			for (final Annotation annotation : parameterAnnotations) {
 				if (annotation.annotationType().equals(PetiteInject.class)) {
 					annotationValues.add(((PetiteInject) annotation).value());
 				}
 			}
 		}
-		
+
 		return StringUtil.join(annotationValues.toArray(new String[annotationValues.size()]), ",");
 	}
 }

@@ -46,14 +46,14 @@ public class PetiteResolvers {
 	protected DestroyMethodResolver destroyMethodResolver;
 	protected ProviderResolver providerResolver;
 
-	public PetiteResolvers(InjectionPointFactory injectionPointFactory) {
-		ctorResolver = new CtorResolver(injectionPointFactory);
-		propertyResolver = new PropertyResolver(injectionPointFactory);
-		methodResolver = new MethodResolver(injectionPointFactory);
-		setResolver = new SetResolver(injectionPointFactory);
-		initMethodResolver = new InitMethodResolver();
-		destroyMethodResolver = new DestroyMethodResolver();
-		providerResolver = new ProviderResolver();
+	public PetiteResolvers(final InjectionPointFactory injectionPointFactory) {
+		this.ctorResolver = new CtorResolver(injectionPointFactory);
+		this.propertyResolver = new PropertyResolver(injectionPointFactory);
+		this.methodResolver = new MethodResolver(injectionPointFactory);
+		this.setResolver = new SetResolver(injectionPointFactory);
+		this.initMethodResolver = new InitMethodResolver();
+		this.destroyMethodResolver = new DestroyMethodResolver();
+		this.providerResolver = new ProviderResolver();
 	}
 
 	// ---------------------------------------------------------------- delegates
@@ -61,50 +61,50 @@ public class PetiteResolvers {
 	/**
 	 * Resolves constructor injection point.
 	 */
-	public CtorInjectionPoint resolveCtorInjectionPoint(Class type) {
-		return ctorResolver.resolve(type, true);
+	public CtorInjectionPoint resolveCtorInjectionPoint(final Class<?> type) {
+		return this.ctorResolver.resolve(type, true);
 	}
 
 	/**
 	 * Resolves property injection points.
 	 */
-	public PropertyInjectionPoint[] resolvePropertyInjectionPoint(Class type, boolean autowire) {
-		return propertyResolver.resolve(type, autowire);
+	public PropertyInjectionPoint[] resolvePropertyInjectionPoint(final Class<?> type, final boolean autowire) {
+		return this.propertyResolver.resolve(type, autowire);
 	}
 
 	/**
 	 * Resolves method injection points.
 	 */
-	public MethodInjectionPoint[] resolveMethodInjectionPoint(Class type) {
-		return methodResolver.resolve(type);
+	public MethodInjectionPoint[] resolveMethodInjectionPoint(final Class<?> type) {
+		return this.methodResolver.resolve(type);
 	}
 
 	/**
 	 * Resolves set injection points.
 	 */
-	public SetInjectionPoint[] resolveSetInjectionPoint(Class type, boolean autowire) {
-		return setResolver.resolve(type, autowire);
+	public SetInjectionPoint<?>[] resolveSetInjectionPoint(final Class<?> type, final boolean autowire) {
+		return this.setResolver.resolve(type, autowire);
 	}
 
 	/**
 	 * Resolves init method points.
 	 */
-	public InitMethodPoint[] resolveInitMethodPoint(Object bean) {
-		return initMethodResolver.resolve(bean);
+	public InitMethodPoint[] resolveInitMethodPoint(final Object bean) {
+		return this.initMethodResolver.resolve(bean);
 	}
 
 	/**
 	 * Resolves destroy method points.
 	 */
-	public DestroyMethodPoint[] resolveDestroyMethodPoint(Object bean) {
-		return destroyMethodResolver.resolve(bean);
+	public DestroyMethodPoint[] resolveDestroyMethodPoint(final Object bean) {
+		return this.destroyMethodResolver.resolve(bean);
 	}
 
 	/**
 	 * Resolves provider definition defined in a bean.
 	 */
-	public ProviderDefinition[] resolveProviderDefinitions(BeanDefinition beanDefinition) {
-		return providerResolver.resolve(beanDefinition);
+	public ProviderDefinition[] resolveProviderDefinitions(final BeanDefinition beanDefinition) {
+		return this.providerResolver.resolve(beanDefinition);
 	}
 
 }
