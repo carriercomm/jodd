@@ -115,7 +115,7 @@ public class PetiteUtil {
 	/**
 	 * Resolves bean's auto-wire flag from the annotation. Returns default auto-wire if annotation doesn't exist.
 	 */
-	public static WiringMode resolveBeanWiringMode(Class type) {
+	public static WiringMode resolveBeanWiringMode(Class<?> type) {
 		PetiteBean petiteBean = ((Class<?>) type).getAnnotation(PetiteBean.class);
 		return petiteBean != null ? petiteBean.wiring() : WiringMode.DEFAULT;
 	}
@@ -124,7 +124,7 @@ public class PetiteUtil {
 	 * Resolves bean's scope type from the annotation. Returns <code>null</code>
 	 * if annotation doesn't exist.
 	 */
-	public static Class<? extends Scope> resolveBeanScopeType(Class type) {
+	public static Class<? extends Scope> resolveBeanScopeType(Class<?> type) {
 		PetiteBean petiteBean = ((Class<?>) type).getAnnotation(PetiteBean.class);
 		return petiteBean != null ? petiteBean.scope() : null;
 	}
@@ -133,7 +133,7 @@ public class PetiteUtil {
 	 * Resolves bean's name from bean annotation or type name. May be used for resolving bean name
 	 * of base type during registration of bean subclass.
 	 */
-	public static String resolveBeanName(Class type, boolean useLongTypeName) {
+	public static String resolveBeanName(Class<?> type, boolean useLongTypeName) {
 		PetiteBean petiteBean = ((Class<?>)type).getAnnotation(PetiteBean.class);
 		String name = null;
 		if (petiteBean != null) {
